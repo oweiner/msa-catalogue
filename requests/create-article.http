@@ -1,0 +1,9 @@
+POST http://localhost:8080/articles/
+Content-Type: application/json
+
+{
+    "name": "Brezel",
+    "price": 0.70
+}
+
+###
