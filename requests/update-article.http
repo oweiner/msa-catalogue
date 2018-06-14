@@ -1,9 +1,9 @@
-PUT http://localhost:8080/articles/e5924b54-4217-4ffd-9f8d-11fbfa75014a
+PUT http://localhost:8080/articles/342c8aab-4745-473b-957b-15be5e96eed3
 Content-Type: application/json
 
 {
     "name": "Oranges",
-    "price": 4.99
+    "price": 3.99
 }
 
 ###

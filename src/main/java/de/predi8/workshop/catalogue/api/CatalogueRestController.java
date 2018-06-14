@@ -5,6 +5,7 @@ import de.predi8.workshop.catalogue.domain.Article;
 import de.predi8.workshop.catalogue.error.NotFoundException;
 import de.predi8.workshop.catalogue.event.Operation;
 import de.predi8.workshop.catalogue.repository.ArticleRepository;
+import io.prometheus.client.Counter;
 import org.apache.kafka.clients.producer.ProducerRecord;
 import org.springframework.http.ResponseEntity;
 import org.springframework.kafka.core.KafkaTemplate;
@@ -27,12 +28,15 @@ public class CatalogueRestController {
 	private KafkaTemplate<String, Operation> kafka;
 	private ObjectMapper mapper;
 
+	private Counter counterUpdate;
+
 	public CatalogueRestController(ArticleRepository articleRepository,
 								   KafkaTemplate<String, Operation> kafka,
 								   ObjectMapper mapper) {
 		this.articleRepository = articleRepository;
 		this.kafka = kafka;
 		this.mapper = mapper;
+		this.counterUpdate = Counter.build().name("articleUpdate").help("counter articleUpdate").register();
 	}
 
 	@GetMapping
@@ -87,6 +91,8 @@ public class CatalogueRestController {
 		op.logSend();
 
 		kafka.send("shop", op).get(100, TimeUnit.MILLISECONDS);
+
+		counterUpdate.inc();
 	}
 
 	@DeleteMapping("/{uuid}")
